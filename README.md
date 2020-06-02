@@ -1,9 +1,5 @@
-![EOSMetal](./logo-text-grey.jpg "EOSMetal")
-
-[https://eosmetal.io](https://eosmetal.io)
-
-# delphioracle-pusher
-Python client for the delphi oracle that uses Kraken as a price feed.
+# wax-delphioracle-pusher
+Python client for the WAX delphi oracle that uses Bittrex as a price feed.
 
 Usage:
 ```bash
