@@ -7,6 +7,8 @@ import colorlog
 import inspect
 import requests
 import pprint
+import datetime as dt
+import pytz
 import eospy.cleos
 import eospy.keys
 SCRIPT_PATH = os.path.dirname(
@@ -101,6 +103,10 @@ def push_quotes(quotes, key):
             "data": data['binargs']
         }]
     }
+
+    trx['expiration'] = str(
+        (dt.datetime.utcnow() +
+         dt.timedelta(seconds=60)).replace(tzinfo=pytz.UTC))
     return cleos.push_transaction(trx, key, broadcast=True)
 
 
@@ -109,7 +115,6 @@ def get_last_tick(symbol):
         result = requests.get(
             'https://api.bittrex.com/api/v1.1/public/getticker?market={}'.
             format(symbol)).json()
-        pp.pprint(result)
         if not result['success']:
             logger.critical('Error getting tick from bittrex: {}'.format(
                 result['message']))
@@ -124,7 +129,7 @@ def main():
     quotes = []
     try:
         with open(KEY_FILE, 'r') as keyfile:
-            key = keyfile.read().replace('\n', '')
+            key = eospy.keys.EOSKey(keyfile.read().replace('\n', ''))
     except Exception as e:
         logger.critical('Error reading private key file: {}'.format(e))
 
